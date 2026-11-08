@@ -74,4 +74,4 @@ The live benchmark exits nonzero on a hard eval failure, failed judge calibratio
 | Evaluate product AI | [Golden cases](src/quality/golden.ts), [repeated trials](src/quality/eval.ts), [judge calibration](src/quality/judge.ts) |
 | Verify customer journeys and operational risks | HTTP contracts, desktop and mobile Chromium emulation, concurrent local checkout smoke, and [incident exercise](docs/INCIDENT.md) |
 
-The project uses synthetic data. The browser mobile lane uses emulation, and the load probe is a local regression smoke test. GitHub Actions syntax was checked locally.
+The project uses synthetic data. The browser mobile lane uses emulation, and the load probe is a local regression smoke test. [Release Quality workflow runs](https://github.com/jsayram/ai-enabled-testing-pipeline-hh/actions/workflows/quality.yml)

@@ -1,6 +1,6 @@
 # Measured results
 
-These artifacts were generated locally on November 8, 2026, on macOS with Node 26.3.0 and Playwright 1.64.1. They use synthetic data. The GitHub Actions workflow was checked with `actionlint`; there is no hosted run for this checkout.
+These artifacts were generated locally on November 8, 2026, on macOS with Node 26.3.0 and Playwright 1.64.1. They use synthetic data. The release gate also passed on GitHub Actions. [First hosted run](https://github.com/jsayram/ai-enabled-testing-pipeline-hh/actions/runs/42499414502)
 
 - **Release decisions:** The [seven-scenario matrix](fault-matrix/comparison.md) matched all expected decisions and specific findings. The healthy run shipped; locator-only drift required review; all five regressions blocked.
 - **Intermittent model faults:** The [regression eval](fault-matrix/eval-regression/assistant-eval.json) passed 64/72 replay trials. Six trials contained unsafe dosage advice; two produced an unsupported shipping promise. Seed zero alone missed both faults.
