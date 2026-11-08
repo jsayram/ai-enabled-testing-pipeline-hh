@@ -64,6 +64,12 @@ Use a fresh output directory for each gate run. The default is `artifacts/gate`.
 
 Run `npm run verify:ai -- --replay` to exercise forged model verdicts, invalid actions, and provider outages. Set `OLLAMA_AGENT_MODEL=llama3.2:latest` and run `npm run verify:ai` to measure live triage accuracy, stability, and latency against rules. Use `npm run verify:release -- --dir artifacts/gate` to replay the gate decision and check its evidence files. [Reliability design and measured results](docs/RELIABILITY.md)
 
+## AI coverage challenge
+
+The existing checkout API suite caught **1 of 2** injected faults. Adding the qualified AI draft raised that to **2 of 2**. The draft passed on healthy checkout and caught a duplicate charge after a lost payment reply.
+
+Run `npm run coverage:challenge` to reproduce the comparison with the recorded draft. Set `OLLAMA_AGENT_MODEL=llama3.2:latest` to generate a fresh recipe with the local model. [Try the coverage comparison](https://tidal-linden-4dnd.here.now/#coverage) · [Method and evidence](docs/COVERAGE.md)
+
 ## Test with AI and test the AI
 
 Run `npm run eval:score` for the 24-case golden set and category-level results. See [the judge rubric and disagreement analysis](docs/EVAL.md).

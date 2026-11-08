@@ -25,6 +25,8 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run typecheck && npm test && npm run eval:score && npm run ai:proposals && npm run verify:ai -- --replay
+      - name: Verify the AI coverage challenge
+        run: npm run coverage:challenge
       - name: Build the browser replay
         run: npm run build:web-demo
       - run: npx playwright install --with-deps chromium

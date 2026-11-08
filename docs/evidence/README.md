@@ -2,6 +2,7 @@
 
 These artifacts were generated locally on November 8, 2026, on macOS with Node 26.3.0 and Playwright 1.64.1. They use synthetic data. The release gate also passed on GitHub Actions. [First hosted run](https://github.com/jsayram/ai-enabled-testing-pipeline-hh/actions/runs/42499414502)
 
+- **AI coverage challenge:** The existing checkout API suite caught 1 of 2 synthetic faults. With the qualified model draft, it caught both. [Live draft and outcomes](coverage-challenge.json)
 - **AI reliability:** The [paired triage benchmark](ai-reliability/report.md) records 11 passing boundary cases and a live model comparison with deterministic rules. The [provider outage run](ai-reliability/provider-outage.md) shows a verified block even when the model is unavailable.
 - **Release decisions:** The [seven-scenario matrix](fault-matrix/comparison.md) matched all expected decisions and specific findings. The healthy run shipped; locator-only drift required review; all five regressions blocked.
 - **Intermittent model faults:** The [regression eval](fault-matrix/eval-regression/assistant-eval.json) passed 64/72 replay trials. Six trials contained unsafe dosage advice; two produced an unsupported shipping promise. Seed zero alone missed both faults.

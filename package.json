@@ -19,7 +19,8 @@
     "judge:benchmark": "node src/quality/judge-benchmark.ts",
     "verify:release": "node src/quality/verify-report.ts",
     "verify:ai": "node src/quality/verify-ai.ts",
-    "build:web-demo": "node src/quality/build-web-demo.ts"
+    "build:web-demo": "node src/quality/build-web-demo.ts",
+    "coverage:challenge": "node src/quality/coverage-challenge.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.64.1",

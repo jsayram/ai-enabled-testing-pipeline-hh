@@ -1,0 +1,59 @@
+{
+  "version": "checkout-coverage/v1",
+  "mode": "live",
+  "model": {
+    "tag": "llama3.2:latest",
+    "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+  },
+  "recipe": {
+    "firstReply": "withheld",
+    "retries": "two-parallel"
+  },
+  "rows": [
+    {
+      "id": "healthy",
+      "label": "Healthy checkout",
+      "baseline": {
+        "outcome": "passed",
+        "detail": "Payment, retries, account isolation and support request contract passed"
+      },
+      "candidate": {
+        "outcome": "passed",
+        "detail": "Retry returned the original paid receipt order-1"
+      }
+    },
+    {
+      "id": "duplicate-charge",
+      "label": "Ordinary retry creates a duplicate charge",
+      "baseline": {
+        "outcome": "caught",
+        "detail": "Idempotent retries must return the original order"
+      },
+      "candidate": {
+        "outcome": "caught",
+        "detail": "Retry returned order-2 instead of the committed receipt order-1"
+      }
+    },
+    {
+      "id": "lost-reply-retry",
+      "label": "Retry after a lost reply creates a duplicate charge",
+      "baseline": {
+        "outcome": "passed",
+        "detail": "Payment, retries, account isolation and support request contract passed"
+      },
+      "candidate": {
+        "outcome": "caught",
+        "detail": "Retry returned order-2 instead of the committed receipt order-1"
+      }
+    }
+  ],
+  "result": {
+    "qualified": true,
+    "faults": 2,
+    "baselineCaught": 1,
+    "augmentedCaught": 2,
+    "added": [
+      "lost-reply-retry"
+    ]
+  }
+}

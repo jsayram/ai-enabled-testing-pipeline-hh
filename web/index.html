@@ -16,6 +16,7 @@
       <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">[·]</span> Release Evidence Lab</a>
       <nav aria-label="Site">
         <a href="#replay">Replay</a>
+        <a href="#coverage">Coverage</a>
         <a href="#benchmark">Benchmark</a>
         <a href="https://github.com/jsayram/ai-enabled-testing-pipeline-hh">Source <span aria-hidden="true">↗</span></a>
       </nav>
@@ -68,6 +69,26 @@
         </article>
       </div>
       <noscript><p>Enable JavaScript to replay the release policy. <a href="https://github.com/jsayram/ai-enabled-testing-pipeline-hh/tree/main/docs/evidence">Browse the recorded evidence on GitHub.</a></p></noscript>
+    </section>
+
+    <section id="coverage" class="benchmark" aria-labelledby="coverage-title">
+      <div class="section-head">
+        <h2 id="coverage-title">Can an AI draft catch a missed bug?</h2>
+        <span class="mono">Recorded coverage challenge</span>
+      </div>
+      <p id="coverage-error" role="status">Loading coverage evidence…</p>
+      <div id="coverage-results" hidden>
+        <p class="bench-context" id="coverage-summary"></p>
+        <table class="coverage-table" aria-label="Injected faults caught by each checkout test suite">
+          <thead><tr><th scope="col">Checkout fixture</th><th scope="col">Existing API suite</th><th scope="col">Suite + AI draft</th></tr></thead>
+          <tbody id="coverage-rows"></tbody>
+        </table>
+        <p class="bench-context" id="coverage-finding"></p>
+        <details>
+          <summary>Inspect the drafted test</summary>
+          <p class="bench-context" id="coverage-recipe"></p>
+        </details>
+      </div>
     </section>
 
     <section id="benchmark" class="benchmark" aria-labelledby="benchmark-title">

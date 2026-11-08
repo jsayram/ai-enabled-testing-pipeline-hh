@@ -5,17 +5,17 @@ import { performance } from 'node:perf_hooks';
 export const shoppers = { a: 'demo-shopper-a', b: 'demo-shopper-b' };
 
 export async function request(base: string, path: string, init?: RequestInit) {
-  return fetch(new URL(path, base), { ...init, signal: AbortSignal.timeout(3000) });
+  return fetch(new URL(path, base), { ...init, signal: init?.signal ?? AbortSignal.timeout(3000) });
 }
 
 function authorization(who: keyof typeof shoppers) {
   return { authorization: 'Bearer ' + shoppers[who] };
 }
 
-export function postOrder(base: string, key: string, payment: string, who: keyof typeof shoppers = 'a') {
+export function postOrder(base: string, key: string, payment: string, who: keyof typeof shoppers = 'a', signal?: AbortSignal) {
   return request(base, '/api/orders', {
     method: 'POST', headers: { ...authorization(who), 'idempotency-key': key, 'content-type': 'application/json' },
-    body: JSON.stringify({ payment }),
+    body: JSON.stringify({ payment }), signal,
   });
 }
 

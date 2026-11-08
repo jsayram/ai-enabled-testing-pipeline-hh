@@ -71,4 +71,5 @@ for (const source of ['web/replay.ts', 'src/quality/policy.ts']) {
 }
 await copyFile(snapshot, join(output, 'evidence.json'));
 await copyFile('docs/evidence/ai-reliability/report.json', join(output, 'benchmark.json'));
+await copyFile('docs/evidence/coverage-challenge.json', join(output, 'coverage.json'));
 console.log('Static demo built in ' + output);

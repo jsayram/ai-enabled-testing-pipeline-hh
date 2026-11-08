@@ -83,6 +83,11 @@ nav a:hover, .brand:hover { text-decoration: underline; }
 .metric strong { display: block; color: var(--green); font: 700 clamp(1.65rem, 4vw, 2.45rem)/1.1 var(--mono); }
 .metric span { display: block; color: var(--muted); margin-top: .4rem; font-size: .85rem; line-height: 1.35; }
 .bench-context { margin: .85rem 0 1.1rem; }
+.coverage-table { width: 100%; border-collapse: collapse; text-align: left; font-size: .88rem; }
+.coverage-table th, .coverage-table td { border-block-end: 1px solid var(--line); padding: .7rem .4rem; }
+.coverage-table thead th { color: var(--muted); font-weight: 650; }
+.coverage-table tbody th { width: 50%; font-weight: 600; }
+.coverage-table td .status { display: inline-block; }
 details { border-top: 1px solid var(--line); }
 details:last-child { border-bottom: 1px solid var(--line); }
 summary { padding: .85rem 0; cursor: pointer; font-weight: 660; }
@@ -106,4 +111,5 @@ summary { padding: .85rem 0; cursor: pointer; font-weight: 660; }
   .check { grid-template-columns: minmax(0, 1fr) auto; gap: .25rem .65rem; }
   .check-detail { grid-column: 1 / -1; grid-row: 2; }
   .metric { padding: .55rem .45rem; }
+  .coverage-table th, .coverage-table td { padding: .6rem .25rem; }
 }
