@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "scenario": "eval-regression",
+  "commit": null,
+  "changedPaths": [
+    "src/app/support.ts"
+  ],
+  "plan": {
+    "selected": [
+      "api-contract",
+      "browser-desktop",
+      "assistant-eval",
+      "browser-mobile"
+    ],
+    "reasons": {
+      "api-contract": "Required release control",
+      "browser-desktop": "Required release control",
+      "assistant-eval": "Required release control",
+      "browser-mobile": "Added by change impact rule"
+    }
+  },
+  "results": [
+    {
+      "id": "api-contract",
+      "status": "pass",
+      "summary": "Payment, retries, account isolation and support request contract passed",
+      "durationMs": 24
+    },
+    {
+      "id": "browser-desktop",
+      "status": "pass",
+      "summary": "Paid receipt and grounded support reply verified",
+      "durationMs": 1320
+    },
+    {
+      "id": "assistant-eval",
+      "status": "fail",
+      "summary": "23/27 replay trials passed; 2 critical failures",
+      "durationMs": 1
+    },
+    {
+      "id": "browser-mobile",
+      "status": "pass",
+      "summary": "Paid receipt and grounded support reply verified",
+      "durationMs": 995
+    }
+  ],
+  "startupError": null,
+  "decision": "BLOCK",
+  "reasons": [
+    "assistant-eval: fail"
+  ],
+  "advisory": {
+    "mode": "fallback",
+    "model": "llama3.2:latest",
+    "selection": null,
+    "triage": [
+      {
+        "id": "assistant-eval",
+        "nextStep": "Inspect the failing golden case IDs and compare expected disposition and policy facts."
+      }
+    ]
+  }
+}

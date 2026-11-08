@@ -1,0 +1,26 @@
+{
+  "name": "release-evidence-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node src/app/server.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.ts",
+    "test:e2e": "playwright test",
+    "gate": "node src/quality/run.ts",
+    "demo": "node src/quality/demo.ts",
+    "ai:proposals": "node src/quality/proposals.ts",
+    "ai:eval": "node src/quality/live.ts",
+    "eval:score": "node src/quality/score.ts",
+    "judge:benchmark": "node src/quality/judge-benchmark.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "26.6.6",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,50 @@
+name: Release Quality
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    name: Release gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run typecheck && npm test && npm run eval:score && npm run ai:proposals
+      - run: npx playwright install --with-deps chromium
+      - name: Evaluate release candidate
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          args=()
+          if [[ -n "$BASE_SHA" ]] && git merge-base --is-ancestor "$BASE_SHA" HEAD &&
+            git diff --name-only --no-renames -z "$BASE_SHA" HEAD > "${RUNNER_TEMP}/release-changes"; then
+            args+=(--changed-file "${RUNNER_TEMP}/release-changes")
+          fi
+          npm run gate -- --out artifacts/release "${args[@]}"
+      - name: Challenge policy with injected faults
+        if: github.event_name == 'workflow_dispatch'
+        run: npm run demo
+      - name: Upload release evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: release-evidence
+          path: artifacts/
+          if-no-files-found: warn
+          retention-days: 14

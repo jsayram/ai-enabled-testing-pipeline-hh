@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "scenario": "eval-regression",
+  "commit": null,
+  "changedPaths": [
+    "src/app/support.ts"
+  ],
+  "plan": {
+    "selected": [
+      "api-contract",
+      "browser-desktop",
+      "assistant-eval",
+      "browser-mobile"
+    ],
+    "reasons": {
+      "api-contract": "Required release control",
+      "browser-desktop": "Required release control",
+      "assistant-eval": "Required release control",
+      "browser-mobile": "Added by change impact rule"
+    }
+  },
+  "results": [
+    {
+      "id": "api-contract",
+      "status": "pass",
+      "summary": "Payment, retries, account isolation and support request contract passed",
+      "durationMs": 22
+    },
+    {
+      "id": "browser-desktop",
+      "status": "pass",
+      "summary": "Paid receipt and grounded support reply verified",
+      "durationMs": 1133
+    },
+    {
+      "id": "assistant-eval",
+      "status": "fail",
+      "summary": "23/27 replay trials passed; 2 critical failures",
+      "durationMs": 2
+    },
+    {
+      "id": "browser-mobile",
+      "status": "pass",
+      "summary": "Paid receipt and grounded support reply verified",
+      "durationMs": 1062
+    }
+  ],
+  "startupError": null,
+  "decision": "BLOCK",
+  "reasons": [
+    "assistant-eval: fail"
+  ],
+  "advisory": {
+    "mode": "live",
+    "model": {
+      "tag": "llama3.2:latest",
+      "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+    },
+    "selection": [
+      "assistant-eval",
+      "api-contract",
+      "browser-desktop",
+      "browser-mobile"
+    ],
+    "triage": [
+      {
+        "id": "assistant-eval",
+        "nextStep": "Inspect the failing golden case IDs and compare expected disposition and policy facts."
+      }
+    ]
+  },
+  "shadowSelection": {
+    "suggested": [
+      "api-contract",
+      "browser-desktop",
+      "assistant-eval",
+      "load-smoke"
+    ],
+    "skippedByShadow": [
+      "browser-mobile"
+    ],
+    "addedByShadowWithoutEvidence": [
+      "load-smoke"
+    ],
+    "omittedFindings": []
+  }
+}

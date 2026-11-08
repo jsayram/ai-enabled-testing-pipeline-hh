@@ -1,0 +1,9 @@
+{
+  "total": 160,
+  "concurrency": 8,
+  "errors": 0,
+  "p95Ms": 6.3,
+  "p95BudgetMs": 250,
+  "requestsPerSecond": 2473,
+  "pass": true
+}

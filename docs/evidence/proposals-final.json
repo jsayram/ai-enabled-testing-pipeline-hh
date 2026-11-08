@@ -1,0 +1,35 @@
+{
+  "mode": "live",
+  "model": {
+    "tag": "llama3.2:latest",
+    "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+  },
+  "providerError": false,
+  "evaluated": [
+    {
+      "status": "review",
+      "proposal": {
+        "invariant": "one-charge",
+        "steps": [
+          "submit",
+          "retry",
+          "conflicting-payment"
+        ]
+      },
+      "baseline": true,
+      "kills": [
+        "duplicate-charge"
+      ]
+    },
+    {
+      "status": "rejected",
+      "reason": "Recipe is invalid or omits a required behavior",
+      "kills": []
+    }
+  ],
+  "coveredMutants": [
+    "duplicate-charge"
+  ],
+  "qualified": 1,
+  "offered": 2
+}
