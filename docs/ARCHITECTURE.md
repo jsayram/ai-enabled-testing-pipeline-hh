@@ -8,6 +8,7 @@ flowchart LR
   Plan --> Checks[API, browser, eval and load checks]
   Checks --> Policy[Release policy]
   Policy --> Evidence[SHIP / REVIEW / BLOCK + evidence]
+  Evidence --> Verify[Replay policy and verify primary artifacts]
   Diff --> Shadow[AI shadow selection]
   Shadow --> Evidence
   Checks --> Advisory[Local AI priority and triage]
@@ -47,4 +48,4 @@ A recovery candidate is permitted only when the exact original locator is absent
 3. **Keep recovery and agents in review.** Track locator proposal acceptance and any missed product regression, time from first failure to actionable cause, and the percentage of AI drafts that pass validation and add useful fault coverage. A qualified recipe still needs an owner and review. Review five borderline decisions with each team before expanding.
 4. **Qualify model promotions separately.** Version the product prompt, model, rubric and golden set. Require repeated live evals on held-out cases and zero observed critical failures; route near-threshold and judge disagreements to humans. Keep the previous model available for rollback. Add real device coverage and a staging load profile once those risks justify the infrastructure.
 
-See the [incident exercise](INCIDENT.md) for how the team responds when a gate catches a fault.
+See the [reliability demo](RELIABILITY.md) for boundary tests and the paired triage benchmark. The [incident exercise](INCIDENT.md) shows how the team responds when the gate catches a fault.

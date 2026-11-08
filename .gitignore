@@ -18,6 +18,9 @@ npm-debug.log*
 /playwright/.cache/
 /playwright/.auth/
 
+# Local hosting state
+/.herenow/
+
 # Local environment files and shareable templates
 .env*
 !.env.example

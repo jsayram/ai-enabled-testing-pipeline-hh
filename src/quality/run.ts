@@ -8,11 +8,13 @@ import { scenarioFrom } from '../app/checkout.ts';
 import { replaySupport } from '../app/support.ts';
 import { apiContract, loadSmoke } from './http.ts';
 import { evaluate } from './eval.ts';
-import { checks, decide, selectChecks } from './policy.ts';
+import { checks, decide, releasePolicyVersion, selectChecks } from './policy.ts';
 import type { CheckId, CheckResult, CheckStatus } from './policy.ts';
 import { runProcess, writeJson } from './io.ts';
-import { replayTriage, runAdvisory } from './advice.ts';
+import { advisoryPromptVersion, replayTriage, runAdvisory } from './advice.ts';
 import { compareShadow, suggestOptionalChecks } from './shadow-selection.ts';
+import { evidenceDigests } from './release-report.ts';
+import { advisoryBudgetMs } from './deadline.ts';
 
 async function browser(project: 'desktop' | 'mobile', base: string, dir: string): Promise<[CheckStatus, string]> {
   const json = join(dir, 'playwright-' + project + '.json');
@@ -112,8 +114,10 @@ async function main() {
   const suggestion = await shadow;
   const shadowSelection = suggestion ? compareShadow(suggestion, plan.selected, results) : null;
   const report = {
-    schema: 1, scenario, commit: process.env.GITHUB_SHA ?? null,
-    changedPaths: paths, plan, results, startupError, ...decision, advisory, shadowSelection,
+    schema: 2, policyVersion: releasePolicyVersion, scenario, commit: process.env.GITHUB_SHA ?? null,
+    evidenceDigests: await evidenceDigests(dir),
+    changedPaths: paths, plan, results, startupError, ...decision, shadowSelection,
+    advisory: { ...advisory, promptVersion: advisoryPromptVersion, budgetMs: advisoryBudgetMs },
   };
   await writeJson(join(dir, 'release.json'), report);
   const cell = (s: string) => s.replace(/[\r\n]/g, ' ').replaceAll('|', '&#124;').replaceAll('<', '&lt;');
@@ -129,6 +133,8 @@ async function main() {
     ...decision.reasons.map(r => '- ' + cell(r)), '',
     ...(startupError ? ['Service error: ' + cell(startupError), ''] : []),
     'Advisory mode: ' + advisory.mode + '. Advisory output cannot change this decision.', '',
+    ...(advisory.selection?.[0] ? ['Suggested first check: ' + advisory.selection[0], ''] : []),
+    ...('reason' in advisory ? ['Advisory fallback: ' + advisory.reason, ''] : []),
     ...advisory.triage.map(t => '- ' + t.id + ': ' + t.nextStep), '',
     ...(shadowSelection ? [
       'Shadow selection: ' + shadowSelection.suggested.join(', '),

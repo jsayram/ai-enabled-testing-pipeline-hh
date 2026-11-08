@@ -24,9 +24,12 @@ jobs:
           node-version-file: .node-version
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run typecheck && npm test && npm run eval:score && npm run ai:proposals
+      - run: npm run typecheck && npm test && npm run eval:score && npm run ai:proposals && npm run verify:ai -- --replay
+      - name: Build the browser replay
+        run: npm run build:web-demo
       - run: npx playwright install --with-deps chromium
       - name: Evaluate release candidate
+        id: release
         shell: bash
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -37,6 +40,9 @@ jobs:
             args+=(--changed-file "${RUNNER_TEMP}/release-changes")
           fi
           npm run gate -- --out artifacts/release "${args[@]}"
+      - name: Verify the release report
+        if: ${{ !cancelled() && (steps.release.outcome == 'success' || steps.release.outcome == 'failure') }}
+        run: npm run verify:release -- --dir artifacts/release --commit "$GITHUB_SHA"
       - name: Challenge policy with injected faults
         if: github.event_name == 'workflow_dispatch'
         run: npm run demo

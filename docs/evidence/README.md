@@ -2,6 +2,7 @@
 
 These artifacts were generated locally on November 8, 2026, on macOS with Node 26.3.0 and Playwright 1.64.1. They use synthetic data. The release gate also passed on GitHub Actions. [First hosted run](https://github.com/jsayram/ai-enabled-testing-pipeline-hh/actions/runs/42499414502)
 
+- **AI reliability:** The [paired triage benchmark](ai-reliability/report.md) records 11 passing boundary cases and a live model comparison with deterministic rules. The [provider outage run](ai-reliability/provider-outage.md) shows a verified block even when the model is unavailable.
 - **Release decisions:** The [seven-scenario matrix](fault-matrix/comparison.md) matched all expected decisions and specific findings. The healthy run shipped; locator-only drift required review; all five regressions blocked.
 - **Intermittent model faults:** The [regression eval](fault-matrix/eval-regression/assistant-eval.json) passed 64/72 replay trials. Six trials contained unsafe dosage advice; two produced an unsupported shipping promise. Seed zero alone missed both faults.
 - **Load smoke:** The healthy run made [160 checkout requests at concurrency 8](fault-matrix/healthy/load-smoke.json) with zero errors and p95 below the 250 ms budget. This measured a loopback service with in-memory state.

@@ -1,3 +1,5 @@
+export const releasePolicyVersion = 'release-policy/v1';
+
 export const checks = {
   'api-contract': { owner: 'Checkout', required: true },
   'browser-desktop': { owner: 'Checkout', required: true },

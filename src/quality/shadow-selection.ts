@@ -1,6 +1,7 @@
 import { identifyLocalModel, localJson } from '../ai/ollama.ts';
 import { changeScope, checks } from './policy.ts';
 import type { CheckId, CheckResult } from './policy.ts';
+import { withAdvisoryDeadline } from './deadline.ts';
 
 const options = {
   none: [],
@@ -27,13 +28,15 @@ export async function suggestOptionalChecks(model: string, paths: string[] | nul
   const scopes = [...new Set(paths?.map(changeScope) ?? [])];
   if (!scopes.length || scopes.includes('unknown')) return 'both';
   try {
-    const identity = await identifyLocalModel(model);
-    const result = await localJson(identity.tag,
-      'Suggest optional coverage in shadow mode before tests run. API, desktop browser, and assistant eval are always required. ' +
-      'Optional coverage is mobile browser emulation and checkout concurrency smoke. Choose none, mobile, load, or both.',
-      { scopes },
-      { type: 'object', required: ['optional'], additionalProperties: false,
-        properties: { optional: { enum: Object.keys(options) } } }) as { optional?: unknown };
+    const result = await withAdvisoryDeadline(async signal => {
+      const identity = await identifyLocalModel(model, signal);
+      return localJson(identity.tag,
+        'Suggest optional coverage in shadow mode before tests run. API, desktop browser, and assistant eval are always required. ' +
+        'Optional coverage is mobile browser emulation and checkout concurrency smoke. Choose none, mobile, load, or both.',
+        { scopes },
+        { type: 'object', required: ['optional'], additionalProperties: false,
+          properties: { optional: { enum: Object.keys(options) } } }, 0, 0, signal);
+    }) as { optional?: unknown };
     return typeof result?.optional === 'string' && Object.hasOwn(options, result.optional) ? result.optional as Option : null;
   } catch { return null; }
 }

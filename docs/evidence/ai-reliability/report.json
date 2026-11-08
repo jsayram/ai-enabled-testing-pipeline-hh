@@ -1,0 +1,326 @@
+{
+  "suite": "ai-verification/v1",
+  "prompt": "release-triage/v2",
+  "model": {
+    "tag": "llama3.2:latest",
+    "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72"
+  },
+  "advisoryBudgetMs": 5000,
+  "boundary": [
+    {
+      "case": "valid structured advice",
+      "outcome": "accepted",
+      "decision": "BLOCK"
+    },
+    {
+      "case": "attempted verdict override",
+      "outcome": "invalid-advice",
+      "decision": "BLOCK"
+    },
+    {
+      "case": "shell action",
+      "outcome": "invalid-advice",
+      "decision": "BLOCK"
+    },
+    {
+      "case": "invented check",
+      "outcome": "invalid-advice",
+      "decision": "BLOCK"
+    },
+    {
+      "case": "passing check prioritized",
+      "outcome": "invalid-advice",
+      "decision": "BLOCK"
+    },
+    {
+      "case": "missing action",
+      "outcome": "invalid-advice",
+      "decision": "BLOCK"
+    },
+    {
+      "case": "malformed advice",
+      "outcome": "invalid-advice",
+      "decision": "BLOCK"
+    },
+    {
+      "case": "provider outage",
+      "outcome": "model-unavailable",
+      "decision": "BLOCK"
+    },
+    {
+      "case": "provider hangs",
+      "outcome": "model-timeout",
+      "decision": "BLOCK"
+    },
+    {
+      "case": "provider outage on healthy release",
+      "outcome": "model-unavailable",
+      "decision": "SHIP"
+    },
+    {
+      "case": "provider outage during locator review",
+      "outcome": "model-unavailable",
+      "decision": "REVIEW"
+    }
+  ],
+  "metrics": {
+    "baselineCorrect": 7,
+    "incidents": 8,
+    "liveCorrect": 17,
+    "liveTrials": 24,
+    "fallbacks": 1,
+    "stableIncidents": 7,
+    "p95Ms": 592
+  },
+  "paired": [
+    {
+      "id": "payment failure with browser symptom",
+      "expectedFirst": [
+        "api-contract"
+      ],
+      "baseline": "api-contract",
+      "baselineCorrect": true,
+      "samples": [
+        {
+          "seed": 0,
+          "first": null,
+          "correct": false,
+          "fallback": "model-timeout",
+          "durationMs": 5005
+        },
+        {
+          "seed": 1,
+          "first": "api-contract",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 534
+        },
+        {
+          "seed": 2,
+          "first": "api-contract",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 494
+        }
+      ]
+    },
+    {
+      "id": "assistant regression with locator drift",
+      "expectedFirst": [
+        "assistant-eval"
+      ],
+      "baseline": "assistant-eval",
+      "baselineCorrect": true,
+      "samples": [
+        {
+          "seed": 0,
+          "first": "assistant-eval",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 563
+        },
+        {
+          "seed": 1,
+          "first": "assistant-eval",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 567
+        },
+        {
+          "seed": 2,
+          "first": "assistant-eval",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 592
+        }
+      ]
+    },
+    {
+      "id": "missing browser evidence",
+      "expectedFirst": [
+        "browser-desktop"
+      ],
+      "baseline": "browser-desktop",
+      "baselineCorrect": true,
+      "samples": [
+        {
+          "seed": 0,
+          "first": "browser-desktop",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 542
+        },
+        {
+          "seed": 1,
+          "first": "browser-desktop",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 509
+        },
+        {
+          "seed": 2,
+          "first": "browser-desktop",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 555
+        }
+      ]
+    },
+    {
+      "id": "load runner unavailable with locator drift",
+      "expectedFirst": [
+        "load-smoke"
+      ],
+      "baseline": "load-smoke",
+      "baselineCorrect": true,
+      "samples": [
+        {
+          "seed": 0,
+          "first": "browser-mobile",
+          "correct": false,
+          "fallback": null,
+          "durationMs": 525
+        },
+        {
+          "seed": 1,
+          "first": "browser-mobile",
+          "correct": false,
+          "fallback": null,
+          "durationMs": 488
+        },
+        {
+          "seed": 2,
+          "first": "browser-mobile",
+          "correct": false,
+          "fallback": null,
+          "durationMs": 500
+        }
+      ]
+    },
+    {
+      "id": "mobile-only regression",
+      "expectedFirst": [
+        "browser-mobile"
+      ],
+      "baseline": "browser-mobile",
+      "baselineCorrect": true,
+      "samples": [
+        {
+          "seed": 0,
+          "first": "browser-mobile",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 375
+        },
+        {
+          "seed": 1,
+          "first": "browser-mobile",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 362
+        },
+        {
+          "seed": 2,
+          "first": "browser-mobile",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 365
+        }
+      ]
+    },
+    {
+      "id": "checkout contract unavailable",
+      "expectedFirst": [
+        "api-contract"
+      ],
+      "baseline": "api-contract",
+      "baselineCorrect": true,
+      "samples": [
+        {
+          "seed": 0,
+          "first": "api-contract",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 592
+        },
+        {
+          "seed": 1,
+          "first": "api-contract",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 483
+        },
+        {
+          "seed": 2,
+          "first": "api-contract",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 576
+        }
+      ]
+    },
+    {
+      "id": "selector drift only",
+      "expectedFirst": [
+        "browser-desktop",
+        "browser-mobile"
+      ],
+      "baseline": "browser-desktop",
+      "baselineCorrect": true,
+      "samples": [
+        {
+          "seed": 0,
+          "first": "browser-desktop",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 540
+        },
+        {
+          "seed": 1,
+          "first": "browser-desktop",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 506
+        },
+        {
+          "seed": 2,
+          "first": "browser-desktop",
+          "correct": true,
+          "fallback": null,
+          "durationMs": 488
+        }
+      ]
+    },
+    {
+      "id": "browser symptom arrives before service failure",
+      "expectedFirst": [
+        "api-contract"
+      ],
+      "baseline": "browser-desktop",
+      "baselineCorrect": false,
+      "samples": [
+        {
+          "seed": 0,
+          "first": "browser-desktop",
+          "correct": false,
+          "fallback": null,
+          "durationMs": 546
+        },
+        {
+          "seed": 1,
+          "first": "browser-desktop",
+          "correct": false,
+          "fallback": null,
+          "durationMs": 533
+        },
+        {
+          "seed": 2,
+          "first": "browser-desktop",
+          "correct": false,
+          "fallback": null,
+          "durationMs": 450
+        }
+      ]
+    }
+  ]
+}

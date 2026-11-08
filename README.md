@@ -4,9 +4,11 @@ Release Evidence Lab is a TypeScript project that demonstrates AI-assisted testi
 
 The storefront has payment, order lookup, and a policy assistant. The release pipeline combines risk-based test selection, API and Playwright checks, and repeated model evals. A local model can suggest optional checks in shadow mode, recommend a triage step, and draft test recipes. The release policy produces `SHIP`, `REVIEW`, or `BLOCK`.
 
-**Start with [the eval and judge benchmark](docs/EVAL.md), [the measured results](docs/evidence/README.md), [the five-minute demo](docs/DEMO.md), or [the architecture and rollout plan](docs/ARCHITECTURE.md).**
+**[Open the interactive browser demo](https://tidal-linden-4dnd.here.now/)** to replay a release verdict, remove required evidence, or compare the AI model with deterministic triage.
 
-![Demo storefront showing a confirmed $24.00 order and a support reply about shipping](docs/images/demo-storefront.png)
+![Browser replay showing the failed assistant eval and the BLOCK verdict during an AI provider outage](docs/images/release-replay.png)
+
+Read the [five-minute demo](docs/DEMO.md), [AI reliability verification](docs/RELIABILITY.md), or [eval and judge benchmark](docs/EVAL.md).
 
 ## Run it
 
@@ -20,7 +22,7 @@ npm test
 npm run demo
 ```
 
-The demo prints the path to a new `artifacts/demo-*/comparison.md`. It asserts the decision, exit code, and specific failed or reviewed checks in each scenario. A failure caused by a missing browser cannot accidentally satisfy the fault matrix.
+The demo prints the path to a new `artifacts/demo-*/comparison.md`. It verifies each saved release report and checks the expected decision, exit code, and findings. The comparison links to the AI reliability checks. A failure caused by a missing browser cannot accidentally satisfy the fault matrix.
 
 | Candidate | Expected result | Why |
 | --- | --- | --- |
@@ -41,6 +43,10 @@ npm start
 ```
 
 Use a fresh output directory for each gate run. The default is `artifacts/gate`. The gate writes Markdown, JSON, and supporting test evidence; exit codes are `0` for ship, `2` for review, and `1` for block. The [GitHub Actions workflow](.github/workflows/quality.yml) runs the same gate, publishes the job summary, and uploads evidence even when the gate fails.
+
+## Verify the AI layer
+
+Run `npm run verify:ai -- --replay` to exercise forged model verdicts, invalid actions, and provider outages. Set `OLLAMA_AGENT_MODEL=llama3.2:latest` and run `npm run verify:ai` to measure live triage accuracy, stability, and latency against rules. Use `npm run verify:release -- --dir artifacts/gate` to replay the gate decision and check its evidence files. [Reliability design and measured results](docs/RELIABILITY.md)
 
 ## Test with AI and test the AI
 

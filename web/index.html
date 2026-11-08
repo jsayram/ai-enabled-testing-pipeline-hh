@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Replay real release decisions and see what happens when the AI advisory layer fails.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Release Evidence Lab · Interactive demo</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./web/replay.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#replay">Skip to scenario replay</a>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">[·]</span> Release Evidence Lab</a>
+      <nav aria-label="Site">
+        <a href="#replay">Replay</a>
+        <a href="#benchmark">Benchmark</a>
+        <a href="https://github.com/jsayram/ai-enabled-testing-pipeline-hh">Source <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+  <main id="top" class="wrap">
+    <section class="intro" aria-labelledby="main-title">
+      <div>
+        <h1 id="main-title">Would this release ship?</h1>
+        <p>Explore how a test pipeline uses AI advice while a deterministic release policy decides what ships.</p>
+      </div>
+      <aside class="replay-note" aria-label="Demo scope">
+        <strong>Interactive replay</strong>
+        <p>The browser runs the same policy against recorded test outcomes. Playwright and model results come from prior lab runs.</p>
+      </aside>
+    </section>
+
+    <section id="replay" aria-labelledby="replay-title">
+      <div class="section-head">
+        <h2 id="replay-title">Replay a release</h2>
+        <span class="mono">Recorded test evidence</span>
+      </div>
+      <p id="replay-error" class="notice" role="status">Loading the scenario evidence…</p>
+      <div class="workspace" id="workspace" hidden>
+        <aside class="scenario-panel" aria-label="Release scenarios">
+          <h3>Scenarios</h3>
+          <div id="scenario-options"></div>
+        </aside>
+        <article class="result" aria-labelledby="scenario-title">
+          <header class="result-header">
+            <div>
+              <h3 id="scenario-title"></h3>
+              <p id="scenario-description"></p>
+            </div>
+            <div class="verdict" id="verdict-block" role="status">
+              <span>Release verdict</span>
+              <strong id="verdict"></strong>
+            </div>
+          </header>
+          <div class="explanation">
+            <p id="recorded-match"></p>
+            <ul id="reasons"></ul>
+          </div>
+          <ul id="checks" class="check-list" aria-label="Check evidence"></ul>
+          <div class="fault-switch">
+            <label><input id="remove-evidence" type="checkbox"> Remove the assistant eval result</label>
+            <p>Recompute the verdict with missing evidence.</p>
+          </div>
+          <p id="advisory" class="advisory" hidden></p>
+        </article>
+      </div>
+      <noscript><p>Enable JavaScript to replay the release policy. <a href="https://github.com/jsayram/ai-enabled-testing-pipeline-hh/tree/main/docs/evidence">Browse the recorded evidence on GitHub.</a></p></noscript>
+    </section>
+
+    <section id="benchmark" class="benchmark" aria-labelledby="benchmark-title">
+      <div class="section-head">
+        <h2 id="benchmark-title">How reliable was the AI advice?</h2>
+        <span class="mono">Recorded benchmark</span>
+      </div>
+      <p id="benchmark-error" role="status">Loading benchmark results…</p>
+      <div id="benchmark-results" hidden>
+        <div id="metrics" class="metrics"></div>
+        <p class="bench-context" id="bench-context"></p>
+        <details>
+          <summary>Inspect all advisory boundary checks</summary>
+          <ul id="boundaries" class="boundary-list"></ul>
+        </details>
+        <details>
+          <summary>Compare the model and rules by incident</summary>
+          <ul id="incidents" class="incident-list"></ul>
+        </details>
+      </div>
+    </section>
+  </main>
+  <footer class="wrap footer">
+    <span>Release Evidence Lab</span>
+    <a href="https://github.com/jsayram/ai-enabled-testing-pipeline-hh/tree/main/docs">Project docs <span aria-hidden="true">↗</span></a>
+  </footer>
+</body>
+</html>

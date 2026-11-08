@@ -1,0 +1,307 @@
+{
+  "policyVersion": "release-policy/v1",
+  "replays": [
+    {
+      "id": "healthy",
+      "changedPaths": null,
+      "results": [
+        {
+          "id": "api-contract",
+          "status": "pass",
+          "summary": "Payment, retries, account isolation and support request contract passed",
+          "durationMs": 26
+        },
+        {
+          "id": "browser-desktop",
+          "status": "pass",
+          "summary": "Paid receipt and grounded support reply verified",
+          "durationMs": 1884
+        },
+        {
+          "id": "assistant-eval",
+          "status": "pass",
+          "summary": "72/72 replay trials passed; 0 critical failures",
+          "durationMs": 2
+        },
+        {
+          "id": "browser-mobile",
+          "status": "pass",
+          "summary": "Paid receipt and grounded support reply verified",
+          "durationMs": 1149
+        },
+        {
+          "id": "load-smoke",
+          "status": "pass",
+          "summary": "160 requests / 0 errors; p95 5.3 ms (budget 250 ms); 2803 req/s",
+          "durationMs": 58
+        }
+      ],
+      "recordedDecision": "SHIP",
+      "verifiedFiles": 4,
+      "advisory": "recorded-checks"
+    },
+    {
+      "id": "selector-drift",
+      "changedPaths": null,
+      "results": [
+        {
+          "id": "api-contract",
+          "status": "pass",
+          "summary": "Payment, retries, account isolation and support request contract passed",
+          "durationMs": 24
+        },
+        {
+          "id": "browser-desktop",
+          "status": "review",
+          "summary": "Locator recovery preserved assertions: checkout-submit → scoped Place order (same action binding)",
+          "durationMs": 1123
+        },
+        {
+          "id": "assistant-eval",
+          "status": "pass",
+          "summary": "72/72 replay trials passed; 0 critical failures",
+          "durationMs": 2
+        },
+        {
+          "id": "browser-mobile",
+          "status": "review",
+          "summary": "Locator recovery preserved assertions: checkout-submit → scoped Place order (same action binding)",
+          "durationMs": 1056
+        },
+        {
+          "id": "load-smoke",
+          "status": "pass",
+          "summary": "160 requests / 0 errors; p95 6.2 ms (budget 250 ms); 2836 req/s",
+          "durationMs": 57
+        }
+      ],
+      "recordedDecision": "REVIEW",
+      "verifiedFiles": 4,
+      "advisory": "recorded-checks"
+    },
+    {
+      "id": "checkout-regression",
+      "changedPaths": null,
+      "results": [
+        {
+          "id": "api-contract",
+          "status": "fail",
+          "summary": "Approved payment must create a paid order\n\n402 !== 201\n",
+          "durationMs": 16
+        },
+        {
+          "id": "browser-desktop",
+          "status": "fail",
+          "summary": "Playwright reported a failure; inspect JSON and traces",
+          "durationMs": 1583
+        },
+        {
+          "id": "assistant-eval",
+          "status": "pass",
+          "summary": "72/72 replay trials passed; 0 critical failures",
+          "durationMs": 3
+        },
+        {
+          "id": "browser-mobile",
+          "status": "fail",
+          "summary": "Playwright reported a failure; inspect JSON and traces",
+          "durationMs": 1510
+        },
+        {
+          "id": "load-smoke",
+          "status": "fail",
+          "summary": "160 requests / 160 errors; p95 6.5 ms (budget 250 ms); 2349 req/s",
+          "durationMs": 69
+        }
+      ],
+      "recordedDecision": "BLOCK",
+      "verifiedFiles": 4,
+      "advisory": "recorded-checks"
+    },
+    {
+      "id": "drift-with-regression",
+      "changedPaths": null,
+      "results": [
+        {
+          "id": "api-contract",
+          "status": "fail",
+          "summary": "Approved payment must create a paid order\n\n402 !== 201\n",
+          "durationMs": 14
+        },
+        {
+          "id": "browser-desktop",
+          "status": "fail",
+          "summary": "Playwright reported a failure; inspect JSON and traces",
+          "durationMs": 1487
+        },
+        {
+          "id": "assistant-eval",
+          "status": "pass",
+          "summary": "72/72 replay trials passed; 0 critical failures",
+          "durationMs": 2
+        },
+        {
+          "id": "browser-mobile",
+          "status": "fail",
+          "summary": "Playwright reported a failure; inspect JSON and traces",
+          "durationMs": 1572
+        },
+        {
+          "id": "load-smoke",
+          "status": "fail",
+          "summary": "160 requests / 160 errors; p95 5.6 ms (budget 250 ms); 2657 req/s",
+          "durationMs": 61
+        }
+      ],
+      "recordedDecision": "BLOCK",
+      "verifiedFiles": 4,
+      "advisory": "recorded-checks"
+    },
+    {
+      "id": "eval-regression",
+      "changedPaths": null,
+      "results": [
+        {
+          "id": "api-contract",
+          "status": "pass",
+          "summary": "Payment, retries, account isolation and support request contract passed",
+          "durationMs": 25
+        },
+        {
+          "id": "browser-desktop",
+          "status": "pass",
+          "summary": "Paid receipt and grounded support reply verified",
+          "durationMs": 1113
+        },
+        {
+          "id": "assistant-eval",
+          "status": "fail",
+          "summary": "64/72 replay trials passed; 6 critical failures",
+          "durationMs": 2
+        },
+        {
+          "id": "browser-mobile",
+          "status": "pass",
+          "summary": "Paid receipt and grounded support reply verified",
+          "durationMs": 1109
+        },
+        {
+          "id": "load-smoke",
+          "status": "pass",
+          "summary": "160 requests / 0 errors; p95 5.5 ms (budget 250 ms); 2802 req/s",
+          "durationMs": 58
+        }
+      ],
+      "recordedDecision": "BLOCK",
+      "verifiedFiles": 4,
+      "advisory": "recorded-checks"
+    },
+    {
+      "id": "duplicate-charge",
+      "changedPaths": null,
+      "results": [
+        {
+          "id": "api-contract",
+          "status": "fail",
+          "summary": "Idempotent retries must return the original order\n+ actual - expected\n\n  {\n+   id: 'order-2',\n-   id: 'order-1',\n    status: 'paid',\n    totalCents: 2400\n  }\n",
+          "durationMs": 19
+        },
+        {
+          "id": "browser-desktop",
+          "status": "pass",
+          "summary": "Paid receipt and grounded support reply verified",
+          "durationMs": 1124
+        },
+        {
+          "id": "assistant-eval",
+          "status": "pass",
+          "summary": "72/72 replay trials passed; 0 critical failures",
+          "durationMs": 2
+        },
+        {
+          "id": "browser-mobile",
+          "status": "pass",
+          "summary": "Paid receipt and grounded support reply verified",
+          "durationMs": 1049
+        },
+        {
+          "id": "load-smoke",
+          "status": "pass",
+          "summary": "160 requests / 0 errors; p95 5.4 ms (budget 250 ms); 2903 req/s",
+          "durationMs": 56
+        }
+      ],
+      "recordedDecision": "BLOCK",
+      "verifiedFiles": 4,
+      "advisory": "recorded-checks"
+    },
+    {
+      "id": "privacy-leak",
+      "changedPaths": null,
+      "results": [
+        {
+          "id": "api-contract",
+          "status": "fail",
+          "summary": "One shopper must never read another shopper’s order\n\n200 !== 404\n",
+          "durationMs": 24
+        },
+        {
+          "id": "browser-desktop",
+          "status": "pass",
+          "summary": "Paid receipt and grounded support reply verified",
+          "durationMs": 1029
+        },
+        {
+          "id": "assistant-eval",
+          "status": "pass",
+          "summary": "72/72 replay trials passed; 0 critical failures",
+          "durationMs": 2
+        },
+        {
+          "id": "browser-mobile",
+          "status": "pass",
+          "summary": "Paid receipt and grounded support reply verified",
+          "durationMs": 1002
+        },
+        {
+          "id": "load-smoke",
+          "status": "pass",
+          "summary": "160 requests / 0 errors; p95 4.7 ms (budget 250 ms); 2991 req/s",
+          "durationMs": 54
+        }
+      ],
+      "recordedDecision": "BLOCK",
+      "verifiedFiles": 4,
+      "advisory": "recorded-checks"
+    },
+    {
+      "id": "provider-outage",
+      "changedPaths": [
+        "README.md"
+      ],
+      "results": [
+        {
+          "id": "api-contract",
+          "status": "pass",
+          "summary": "Payment, retries, account isolation and support request contract passed",
+          "durationMs": 22
+        },
+        {
+          "id": "browser-desktop",
+          "status": "pass",
+          "summary": "Paid receipt and grounded support reply verified",
+          "durationMs": 1812
+        },
+        {
+          "id": "assistant-eval",
+          "status": "fail",
+          "summary": "64/72 replay trials passed; 6 critical failures",
+          "durationMs": 3
+        }
+      ],
+      "recordedDecision": "BLOCK",
+      "verifiedFiles": 2,
+      "advisory": "model-unavailable"
+    }
+  ]
+}

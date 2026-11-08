@@ -4,10 +4,11 @@ function validateTag(model: string) {
   }
 }
 
-export async function identifyLocalModel(model: string) {
+export async function identifyLocalModel(model: string, signal?: AbortSignal) {
   validateTag(model);
   const tag = model.includes(':') ? model : model + ':latest';
-  const response = await fetch('http://127.0.0.1:11434/api/tags', { signal: AbortSignal.timeout(3000) });
+  const timeout = AbortSignal.timeout(3000);
+  const response = await fetch('http://127.0.0.1:11434/api/tags', { signal: signal ? AbortSignal.any([signal, timeout]) : timeout, redirect: 'error' });
   if (!response.ok) throw new Error('Cannot list local Ollama models');
   const listed = await response.json() as { models?: { name?: string; digest?: string }[] };
   const match = listed.models?.find(item => item.name === tag);
@@ -15,10 +16,12 @@ export async function identifyLocalModel(model: string) {
   return { tag, digest: match.digest };
 }
 
-export async function localJson(model: string, system: string, payload: unknown, schema: object, seed = 0, temperature = 0) {
+export async function localJson(model: string, system: string, payload: unknown, schema: object, seed = 0, temperature = 0, signal?: AbortSignal) {
   validateTag(model);
+  const timeout = AbortSignal.timeout(45000);
   const response = await fetch('http://127.0.0.1:11434/api/chat', {
-    method: 'POST', headers: { 'content-type': 'application/json' }, signal: AbortSignal.timeout(45000),
+    method: 'POST', headers: { 'content-type': 'application/json' },
+    signal: signal ? AbortSignal.any([signal, timeout]) : timeout, redirect: 'error',
     body: JSON.stringify({
       model, stream: false, format: schema, think: false,
       options: { seed, temperature, num_predict: 350 },

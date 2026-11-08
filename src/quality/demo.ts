@@ -5,6 +5,7 @@ import { scenarios } from '../app/checkout.ts';
 import type { Scenario } from '../app/checkout.ts';
 import type { CheckId, CheckResult, Decision } from './policy.ts';
 import { runProcess } from './io.ts';
+import { verifyReleaseReport } from './release-report.ts';
 
 const expected: Record<Scenario, [Decision, number, CheckId[]]> = {
   healthy: ['SHIP', 0, []],
@@ -27,6 +28,7 @@ for (const scenario of scenarios) {
     { decision: Decision; results: CheckResult[] };
   const expectedStatus = decision === 'REVIEW' ? 'review' : 'fail';
   assert.equal(report.decision, decision, child.stdout + child.stderr);
+  assert.equal((await verifyReleaseReport(output)).decision, decision);
   assert.equal(child.code, code, child.stdout + child.stderr);
   assert.deepEqual(report.results.filter(r => r.status !== 'pass').map(r => [r.id, r.status]),
     findings.map(id => [id, expectedStatus]), child.stdout + child.stderr);
@@ -34,5 +36,8 @@ for (const scenario of scenarios) {
     (findings.join(', ') || 'All checks passed') + ' |');
   console.log(scenario + ': ' + report.decision);
 }
+const reliability = await runProcess(['src/quality/verify-ai.ts', '--replay', '--out', join(directory, 'ai-reliability')]);
+assert.equal(reliability.code, 0, reliability.stdout + reliability.stderr);
+lines.push('', 'Each release report was verified. See the [AI reliability checks](ai-reliability/report.md) for the model boundary results.');
 await writeFile(join(directory, 'comparison.md'), lines.join('\n') + '\n');
 console.log('Evidence: ' + directory + '/comparison.md');
