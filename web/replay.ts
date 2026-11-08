@@ -1,6 +1,5 @@
 import { checks, decide, releasePolicyVersion, selectChecks } from '../src/quality/policy.ts';
 import type { CheckId, CheckResult, Decision } from '../src/quality/policy.ts';
-import type { CoverageReport } from '../src/quality/coverage-challenge.ts';
 
 export type Replay = {
   id: string;
@@ -142,37 +141,5 @@ async function setupBenchmark() {
   get('benchmark-error').hidden = true;
 }
 
-async function setupCoverage() {
-  const { model, recipe, rows, result } = await load<CoverageReport>('coverage.json');
-  if (!model || !recipe || !result.qualified) throw new Error('A qualified recorded draft is required');
-  get('coverage-summary').textContent = 'The existing API suite caught ' + result.baselineCaught + ' of ' + result.faults +
-    ' injected faults. Adding the qualified draft raised that to ' + result.augmentedCaught + ' of ' + result.faults + '.';
-
-  function outcome(value: 'passed' | 'caught' | 'error', healthy: boolean) {
-    const label = value === 'caught' ? 'Caught' : value === 'error' ? 'Error' : healthy ? 'Passed' : 'Missed';
-    const status = value === 'error' ? 'error' : label === 'Missed' ? 'review' : 'pass';
-    const cell = element('td', '');
-    cell.append(element('span', label, 'status status-' + status));
-    return cell;
-  }
-
-  get('coverage-rows').replaceChildren(...rows.map(row => {
-    const tableRow = element('tr', '');
-    const title = element('th', row.label);
-    title.scope = 'row';
-    const combined = row.baseline.outcome === 'passed' ? row.candidate?.outcome ?? 'error' : row.baseline.outcome;
-    tableRow.append(title, outcome(row.baseline.outcome, row.id === 'healthy'), outcome(combined, row.id === 'healthy'));
-    return tableRow;
-  }));
-  const finding = rows.find(row => result.added.includes(row.id));
-  get('coverage-finding').textContent = finding?.candidate?.detail ?? 'The draft added no coverage in this recorded run.';
-  get('coverage-recipe').textContent = model.tag + ' selected a ' + recipe.firstReply + ' first reply and ' +
-    (recipe.retries === 'one' ? 'one retry' : 'two concurrent retries') +
-    '. The harness checked that each retry returned the same paid receipt. The prompt contained the API contract and allowed operations.';
-  get('coverage-results').hidden = false;
-  get('coverage-error').hidden = true;
-}
-
 void setupReplay().catch(() => { get('replay-error').textContent = 'Could not load the replay evidence. Reload the page to try again.'; });
-void setupCoverage().catch(() => { get('coverage-error').textContent = 'Could not load the coverage evidence.'; });
 void setupBenchmark().catch(() => { get('benchmark-error').textContent = 'Could not load the benchmark evidence.'; });

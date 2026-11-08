@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { parseArgs } from 'node:util';
 import ts from 'typescript';
@@ -7,6 +8,8 @@ import { scenarios } from '../app/checkout.ts';
 import { decide, releasePolicyVersion, selectChecks } from './policy.ts';
 import type { CheckResult } from './policy.ts';
 import type { Replay } from '../../web/replay.ts';
+import { renderCoverage } from '../../web/coverage.ts';
+import type { CoverageReport } from './coverage-challenge.ts';
 import { verifyReleaseReport } from './release-report.ts';
 import { writeJson } from './io.ts';
 
@@ -54,10 +57,13 @@ for (const replay of evidence.replays) {
   assert.equal(verdict.decision, replay.recordedDecision, 'Recorded evidence differs from replay for ' + replay.id);
 }
 
-const output = 'dist/demo';
-await rm(output, { recursive: true, force: true });
-await mkdir(output, { recursive: true });
-for (const file of ['index.html', 'styles.css']) await copyFile(join('web', file), join(output, file));
+const coverage = await readJson<CoverageReport>('docs/evidence/coverage-challenge.json');
+const coverageHtml = renderCoverage(coverage);
+const assets = new Map([
+  ['styles.css', await readFile('web/styles.css', 'utf8')],
+  ['evidence.json', await readFile(snapshot, 'utf8')],
+  ['benchmark.json', await readFile('docs/evidence/ai-reliability/report.json', 'utf8')],
+]);
 for (const source of ['web/replay.ts', 'src/quality/policy.ts']) {
   const result = ts.transpileModule(await readFile(source, 'utf8'), {
     fileName: source,
@@ -65,11 +71,25 @@ for (const source of ['web/replay.ts', 'src/quality/policy.ts']) {
       target: ts.ScriptTarget.ES2024, module: ts.ModuleKind.ESNext, rewriteRelativeImportExtensions: true,
     },
   });
-  const file = join(output, source.replace(/\.ts$/, '.js'));
-  await mkdir(dirname(file), { recursive: true });
-  await writeFile(file, result.outputText);
+  assets.set(source.replace(/\.ts$/, '.js'), result.outputText);
 }
-await copyFile(snapshot, join(output, 'evidence.json'));
-await copyFile('docs/evidence/ai-reliability/report.json', join(output, 'benchmark.json'));
-await copyFile('docs/evidence/coverage-challenge.json', join(output, 'coverage.json'));
+
+// Keep the page, script, policy, and JSON in sync when browsers cache static assets.
+const digest = createHash('sha256').update(JSON.stringify([...assets])).digest('hex').slice(0, 16);
+const assetRoot = 'assets/' + digest;
+const template = await readFile('web/index.html', 'utf8');
+const coverageSlot = '<!-- coverage-results -->';
+assert.ok(template.includes(coverageSlot), 'The browser page must include a coverage results slot.');
+const page = template
+  .replace('./styles.css', './' + assetRoot + '/styles.css')
+  .replace('./web/replay.js', './' + assetRoot + '/web/replay.js')
+  .replace(coverageSlot, () => coverageHtml);
+const output = 'dist/demo';
+await rm(output, { recursive: true, force: true });
+for (const [relative, contents] of assets) {
+  const file = join(output, assetRoot, relative);
+  await mkdir(dirname(file), { recursive: true });
+  await writeFile(file, contents);
+}
+await writeFile(join(output, 'index.html'), page);
 console.log('Static demo built in ' + output);
