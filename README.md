@@ -10,6 +10,22 @@ The storefront has payment, order lookup, and a policy assistant. The release pi
 
 Read the [five-minute demo](docs/DEMO.md), [AI reliability verification](docs/RELIABILITY.md), or [eval and judge benchmark](docs/EVAL.md).
 
+## Tech stack and trade-offs
+
+| Part | What it does | Why it was chosen | Trade-offs |
+| --- | --- | --- | --- |
+| TypeScript 5.9 | Defines test inputs, check results, and the release policy shared by the CLI and browser. | One policy implementation keeps the hosted replay aligned with the gate. Strict types catch mismatched IDs and result shapes during development. | Types are erased at runtime. Model output and saved reports still need runtime validation. |
+| Node.js 26.3.0 and npm | Run the storefront, CLI, unit tests, HTTP contracts, and load smoke. The npm lockfile pins dependencies for repeatable installs. | Built-in HTTP, Fetch, and assertions keep setup small. The in-memory storefront makes faults easy to inject and reproduce. | Requires a recent Node release. In-memory state resets on restart and leaves database and distributed failures outside the demo. |
+| Playwright and Chromium | Exercise checkout and support in desktop and mobile-emulated browser sessions. | The checks observe real requests and rendered receipts. Failure traces help distinguish a locator change from broken behavior. | Browser setup costs more time than unit or API tests. Chromium emulation leaves physical devices and other browser engines outside coverage. |
+| Deterministic gate and SHA-256 evidence | Produce and replay `SHIP`, `REVIEW`, or `BLOCK`. Hashes detect changes to primary evidence files. | Explicit rules make decisions reproducible and preserve required checks even if the AI provider fails. | Check selection rules need maintenance. Hashes verify file consistency, and authenticity depends on a trusted runner or signed provenance. |
+| Golden cases and fault injection | Score assistant replies, benchmark the judge against reference labels, and verify that proposed tests catch known faults. | Repeated trials expose intermittent failures. Known faults give generated tests an observable success criterion. | Synthetic cases cover a limited set of failures. The judge comparison uses authored reference labels, and both the cases and rubric need upkeep. |
+| Ollama and Llama 3.2 | Provide optional local model runs for support evaluation, judging, triage, and test drafting. | Loopback inference keeps inputs on the machine and works without a hosted model key. The benchmark records the model digest for comparison. | Hardware and model startup affect latency. Responses can vary, and deterministic triage performed better in the recorded benchmark. |
+| GitHub Actions | Runs the checks on pushes and pull requests, verifies the saved release report, and uploads evidence. | The same commands work locally and in CI. A reviewer can inspect the run and its artifacts from the repository. | CI adds runner and browser installation time. The workflow retains uploaded artifacts for 14 days. |
+| HTML, CSS, and browser JavaScript | Render the interactive demo and run the shared release policy against recorded evidence. | A small static bundle loads without a frontend framework. Visitors can remove a required result and immediately see how the verdict changes. | The evidence is a snapshot. Refreshing it requires exporting a new run, and fresh API, browser, or model tests run outside the page. |
+| here.now | Hosts the static demo at a public URL. | Visitors can open it without installing the stack, and the hosted bundle requires no inference credentials. | Site updates require a new publish. Running the full test pipeline online requires separate compute, such as CI for Playwright. |
+
+See the [architecture](docs/ARCHITECTURE.md) and [measured reliability results](docs/RELIABILITY.md) for the evidence behind these choices.
+
 ## Run it
 
 Use Node **26.3.0** (see `.node-version`) and npm. Install dependencies and Chromium once. The default gate and fault demo run without model credentials, cloud accounts, or Ollama.
